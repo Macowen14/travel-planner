@@ -1,9 +1,52 @@
 import { useRouter } from "expo-router";
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ToastAndroid,
+} from "react-native";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../../configs/firebase";
 
 const SignupPage = () => {
   const route = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+
+  // Function to handle user sign up
+  const handleSignUp = () => {
+    if (email.length === 0 || password.length === 0 || fullname.length === 0) {
+      ToastAndroid.show("Please fill in all fields", ToastAndroid.TOP);
+    } else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up successfully
+          const user = userCredential.user;
+          console.log("User signed up:", user);
+
+          // // Optionally update the user's profile to include the full name
+          // user
+          //   .updateProfile({
+          //     displayName: fullname,
+          //   })
+          //   .then(() => {
+          //     console.log("Full name set successfully.");
+          //   })
+          //   .catch((error) => {
+          //     console.error("Error updating profile:", error);
+          //   });
+        })
+        .catch((error) => {
+          // Handle errors here
+          console.error("Error signing up:", error.code, error.message);
+        });
+    }
+  };
+
   return (
     <View className="flex-1 bg-gray-200 justify-center items-center p-6">
       <Image
@@ -18,27 +61,36 @@ const SignupPage = () => {
           className="border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 bg-gray-50"
           placeholder="Full Name"
           placeholderTextColor="#6B7280"
+          value={fullname}
+          onChangeText={setFullname} // Directly updating the fullname state
         />
         <TextInput
           className="border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 bg-gray-50"
           placeholder="Email"
           placeholderTextColor="#6B7280"
           keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail} // Directly updating the email state
         />
         <TextInput
           className="border border-gray-300 rounded-lg p-4 mb-6 text-gray-800 bg-gray-50"
           placeholder="Password"
           placeholderTextColor="#6B7280"
           secureTextEntry
+          value={password}
+          onChangeText={setPassword} // Directly updating the password state
         />
-        <TouchableOpacity className="bg-blue-600 py-4 rounded-lg shadow-md">
+        <TouchableOpacity
+          className="bg-blue-600 py-4 rounded-lg shadow-md"
+          onPress={handleSignUp} // Calling the handleSignUp function on press
+        >
           <Text className="text-white text-center text-lg font-bold">
             Sign Up
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            route.back();
+            route.back(); // Navigate back to the previous screen
           }}
         >
           <Text className="text-gray-600 text-center mt-4">

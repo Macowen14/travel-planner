@@ -1,16 +1,42 @@
 import React, { useEffect } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../configs/firebase";
 import {
   View,
   Text,
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
-import { useNavigation, useRouter } from "expo-router";
+import { Redirect, useNavigation, useRouter } from "expo-router";
 
 const Signin = () => {
   const navigation = useNavigation();
   const route = useRouter();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  // Function to handle sign-in
+  const handleSignIn = () => {
+    if (!email || !password) {
+      ToastAndroid.show("Please fill in all fields", ToastAndroid.TOP);
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          route.navigate("/mytrip");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
+          console.log(errorCode, errorMessage);
+        });
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -54,6 +80,8 @@ const Signin = () => {
             placeholder="Enter your email"
             keyboardType="email-address"
             style={{ fontFamily: "outfitRegular" }}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
           />
         </View>
 
@@ -69,10 +97,15 @@ const Signin = () => {
             placeholder="Enter your password"
             secureTextEntry
             style={{ fontFamily: "outfitRegular" }}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
           />
         </View>
 
-        <TouchableOpacity className="bg-blue-600 rounded-lg py-4 mt-10 items-center">
+        <TouchableOpacity
+          className="bg-blue-600 rounded-lg py-4 mt-10 items-center"
+          onPress={handleSignIn} // Call handleSignIn on press
+        >
           <Text
             className="text-white font-bold"
             style={{ fontFamily: "outfitBold", fontSize: 18 }}
@@ -96,7 +129,6 @@ const Signin = () => {
         </TouchableOpacity>
       </View>
 
-      {/* "Don't have an account?" Section */}
       <View className="absolute bottom-4 w-full items-center">
         <View className="flex flex-row items-center">
           <Text
