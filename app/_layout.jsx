@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
+import { ContextProvider } from "../context/CreateTripContext";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -13,17 +14,17 @@ export default function RootLayout() {
 
   if (!fontsLoaded) {
     return (
-      <View>
+      <View className="flex-1 items-center justify-center">
         <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name="index" /> */}
-
-      <Stack.Screen name="(tabs)" />
-    </Stack>
+    <ContextProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </ContextProvider>
   );
 }

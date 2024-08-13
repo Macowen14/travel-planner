@@ -1,22 +1,30 @@
+import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 import Welcome from "../components/Welcome";
 import { auth } from "../configs/firebase";
 import { Href, useRouter } from "expo-router";
-import React from "react";
 
 export default function Index() {
+  const [loading, setLoading] = useState(true); // State to manage loading
   const router = useRouter();
-  const user = auth.currentUser;
 
-  // Handle user redirection
-  React.useEffect(() => {
-    if (user) {
-      router.push("/mytrip" as Href<string>);
-    }
-  }, [user, router]);
+  useEffect(() => {
+    // Subscribe to authentication state changes
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // Navigate to '/mytrip' if user is authenticated
+        router.push("/mytrip" as Href<string>);
+      } else {
+        // Set loading to false if no user
+        setLoading(false);
+      }
+    });
 
-  // Show a loading indicator while checking authentication status
-  if (user === null) {
+    // Clean up subscription on unmount
+    return () => unsubscribe();
+  }, [router]);
+
+  if (loading) {
     return (
       <View
         style={{
@@ -30,14 +38,13 @@ export default function Index() {
     );
   }
 
-  // Render the Welcome component if no user is logged in
   return (
     <View
       style={{
         flex: 1,
       }}
     >
-      {!user && <Welcome />}
+      <Welcome />
     </View>
   );
 }
