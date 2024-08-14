@@ -1,9 +1,12 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 
-const TravelPlanCard = ({ item }) => {
+const TravelPlanCard = ({ item, isSelected, onPress }) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity
+      style={[styles.card, isSelected && styles.cardSelected]}
+      onPress={() => onPress(item)}
+    >
       <View style={styles.cardContent}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.desc}</Text>
@@ -21,7 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 16,
     marginBottom: 12,
     shadowColor: "#000",
@@ -29,6 +32,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  cardSelected: {
+    borderColor: "#009688",
+    borderWidth: 2,
+    backgroundColor: "#e0f2f1",
   },
   cardContent: {
     flex: 1,

@@ -17,7 +17,6 @@ const MyTrip = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" backgroundColor="#fff" />
       <View style={styles.headerContainer}>
         <Text style={styles.title}>My Trips</Text>
         <TouchableOpacity
