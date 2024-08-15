@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../configs/firebase";
+// src/components/Signin.js
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,32 +8,40 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
-import { Redirect, useNavigation, useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
+import { signInWithEmail, signInWithGoogle } from "../../../services/auth"; // Import authentication functions
 
 const Signin = () => {
   const navigation = useNavigation();
   const route = useRouter();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Function to handle sign-in
-  const handleSignIn = () => {
+  // Function to handle sign-in with email and password
+  const handleSignIn = async () => {
     if (!email || !password) {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.TOP);
     } else {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user);
-          route.navigate("/mytrip");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
-          console.log(errorCode, errorMessage);
-        });
+      try {
+        const user = await signInWithEmail(email, password);
+        console.log(user);
+        route.navigate("/mytrip");
+      } catch (error) {
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        console.log(error.code, error.message);
+      }
+    }
+  };
+
+  // Function to handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      const user = await signInWithGoogle();
+      console.log(user);
+      route.navigate("/mytrip");
+    } catch (error) {
+      ToastAndroid.show(error.message, ToastAndroid.SHORT);
+      console.log(error.code, error.message);
     }
   };
 
@@ -104,13 +111,25 @@ const Signin = () => {
 
         <TouchableOpacity
           className="bg-blue-600 rounded-lg py-4 mt-10 items-center"
-          onPress={handleSignIn} // Call handleSignIn on press
+          onPress={handleSignIn}
         >
           <Text
             className="text-white font-bold"
             style={{ fontFamily: "outfitBold", fontSize: 18 }}
           >
             Sign In
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="bg-red-600 rounded-lg py-4 mt-4 items-center"
+          onPress={handleGoogleSignIn}
+        >
+          <Text
+            className="text-white font-bold"
+            style={{ fontFamily: "outfitBold", fontSize: 18 }}
+          >
+            Sign in with Google
           </Text>
         </TouchableOpacity>
 

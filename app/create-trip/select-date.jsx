@@ -13,13 +13,38 @@ import dayjs from "dayjs";
 import { StatusBar } from "expo-status-bar";
 
 const SelectDate = () => {
-  const [date, setDate] = useState(dayjs());
-  const [mode, setMode] = useState("single"); // State to toggle between single and range modes
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [selectedRange, setSelectedRange] = useState({
+    start: null,
+    end: null,
+  });
+  const [mode, setMode] = useState("single");
   const navigation = useNavigation();
 
   const handleModeChange = (newMode) => {
     setMode(newMode);
-    setDate(dayjs()); // Reset date when switching mode
+    setSelectedDate(dayjs());
+    setSelectedRange({ start: null, end: null }); // Reset date range when switching mode
+  };
+
+  const handleDateChange = (params) => {
+    if (mode === "single") {
+      setSelectedDate(params.date);
+    } else if (params.range) {
+      setSelectedRange(params.range);
+    }
+  };
+
+  const formatSelectedDate = () => {
+    if (mode === "single") {
+      return selectedDate.format("dddd, MMMM D, YYYY");
+    }
+    if (selectedRange.start && selectedRange.end) {
+      return `${dayjs(selectedRange.start).format("MMMM D, YYYY")} - ${dayjs(
+        selectedRange.end
+      ).format("MMMM D, YYYY")}`;
+    }
+    return "Please select a date range";
   };
 
   return (
@@ -39,8 +64,9 @@ const SelectDate = () => {
       <View style={styles.calendarContainer}>
         <DateTimePicker
           mode={mode}
-          date={date}
-          onChange={(params) => setDate(params.date)}
+          date={selectedDate}
+          range={selectedRange}
+          onChange={handleDateChange}
           styles={{
             header: {
               backgroundColor: "#1e3a5f",
@@ -90,6 +116,15 @@ const SelectDate = () => {
           <Text style={styles.buttonText}>Select Date Range</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={styles.selectedDateContainer}>
+        <Text style={styles.selectedDateText}>Selected Date: </Text>
+        <Text style={styles.selectedDateValue}>{formatSelectedDate()}</Text>
+      </View>
+
+      <TouchableOpacity style={styles.setDateButton}>
+        <Text style={styles.setDateButtonText}>Set Date</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -141,6 +176,34 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontFamily: "outfitRegular",
+  },
+  selectedDateContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  selectedDateText: {
+    color: "#ffba00",
+    fontFamily: "outfitRegular",
+    fontSize: 18,
+  },
+  selectedDateValue: {
+    color: "#fff",
+    fontFamily: "outfitBold",
+    fontSize: 20,
+    marginTop: 4,
+  },
+  setDateButton: {
+    marginTop: 30,
+    backgroundColor: "#009688",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    alignItems: "center",
+  },
+  setDateButtonText: {
+    color: "#fff",
+    fontFamily: "outfitBold",
+    fontSize: 18,
   },
 });
 

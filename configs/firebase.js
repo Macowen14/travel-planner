@@ -25,4 +25,6 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
+auth.useDeviceLanguage();
+
 export { auth };
