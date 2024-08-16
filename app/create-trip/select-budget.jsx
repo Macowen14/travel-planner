@@ -21,7 +21,6 @@ const Budget = () => {
 
   const handleContinue = () => {
     if (selectedBudget) {
-      console.log("/////////////////////////////////////////");
       console.log(budgetOption);
 
       updateTripData({
@@ -64,8 +63,8 @@ const Budget = () => {
             item={item}
             isSelected={selectedBudget === index}
             onPress={() => {
-              setSelectedBudget(index);
               setBudgetOtion(item);
+              setSelectedBudget(index);
             }}
           />
         ))}

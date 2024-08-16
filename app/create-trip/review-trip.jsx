@@ -1,21 +1,123 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useContext } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
+import Entypo from "@expo/vector-icons/Entypo";
+import { CreateTripContext } from "../../context/CreateTripContext";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 const ReviewTrip = () => {
   const navigation = useNavigation();
+  const { tripData } = useContext(CreateTripContext);
+
+  if (tripData.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-100 pt-4">
+        <TouchableOpacity
+          className="p-3 rounded-full absolute top-8 left-5 bg-teal-500"
+          onPress={() => navigation.goBack()}
+        >
+          <AntDesign name="arrowleft" size={24} color="white" />
+        </TouchableOpacity>
+        <Text className="mt-10 font-bold text-center text-3xl text-teal-600">
+          Review Your Trip
+        </Text>
+        <Text className="text-gray-600 text-center mt-2 mx-8 font-medium">
+          No trip data available.
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  const firstTrip = tripData[tripData.length - 1];
 
   return (
-    <View>
+    <SafeAreaView className="flex-1 bg-gray-100 pt-4">
       <TouchableOpacity
-        className="p-2 rounded-full absolute top-8 left-5 bg-[#00CCBB]"
+        className="p-3 rounded-full absolute top-8 left-5 bg-teal-500"
         onPress={() => navigation.goBack()}
       >
         <AntDesign name="arrowleft" size={24} color="white" />
       </TouchableOpacity>
-      <Text>ReviewTrip</Text>
-    </View>
+      <Text className="mt-10 font-bold text-center text-3xl text-teal-600">
+        Review Your Trip
+      </Text>
+      <Text className="text-gray-600 text-center mt-2 mx-8 font-medium">
+        Ensure the trip data is correct so that it can be saved and we can plan
+        your trip.
+      </Text>
+
+      <View className="mt-8 px-4">
+        <View className="flex flex-row items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-lg">
+          <Entypo name="location-pin" size={36} color="teal" />
+          <View className="flex-1 ml-4">
+            <Text className="font-semibold text-xl text-teal-600">
+              Travel Location
+            </Text>
+            <Text className="text-gray-700 font-medium text-lg">
+              {firstTrip.name || "No location data"}
+            </Text>
+          </View>
+        </View>
+
+        <View className="mb-6 bg-white p-4 rounded-lg shadow-lg flex flex-row">
+          <View className="flex flex-row items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-lg">
+            <FontAwesome5 name="money-check-alt" size={24} color="teal" />
+          </View>
+          <View className="flex-col ml-2">
+            <Text className="font-semibold text-xl text-teal-600">Budget</Text>
+            <Text className="text-gray-700 font-medium text-lg">
+              {firstTrip.budget?.amount || "No budget data"}
+            </Text>
+            <Text className="text-gray-600 font-medium">
+              {firstTrip.budget?.desc || "No budget description"}
+            </Text>
+          </View>
+        </View>
+
+        <View className="mb-6 bg-white p-4 rounded-lg shadow-lg flex flex-row">
+          <View className="flex flex-row items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-lg">
+            <FontAwesome name="calendar" size={24} color="teal" />
+          </View>
+          <View className="flex-col ml-3">
+            <Text className="font-semibold text-xl text-teal-600">Date</Text>
+            <Text className="text-gray-700 font-medium text-lg">
+              {firstTrip.date || "No date data"}
+            </Text>
+          </View>
+        </View>
+
+        <View className="mb-6 bg-white p-4 rounded-lg shadow-lg flex-row">
+          <View className="flex flex-row items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-lg">
+            <FontAwesome6 name="users" size={24} color="teal" />
+          </View>
+          <View className="flex-col ml-3">
+            <Text className="font-semibold text-xl text-teal-600">
+              Travel Plan
+            </Text>
+            <Text className="text-gray-700 font-medium text-lg">
+              {firstTrip.travelPlan?.title || "No travel plan title"}
+            </Text>
+          </View>
+        </View>
+        <Text className="text-gray-600 font-medium">
+          Estimated Duration: {firstTrip.travelPlan?.estimate || "No estimate"}
+        </Text>
+      </View>
+
+      <View className="items-center">
+        <TouchableOpacity
+          className="bg-teal-500 py-4 shadow-md text-white text-center font-bold w-[70vw] rounded-xl"
+          onPress={() => router.push("/create-trip/generateTrip")}
+        >
+          <Text className="text-white text-center text-lg font-bold">
+            Generate Trip
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
