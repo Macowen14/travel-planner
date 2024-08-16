@@ -1,4 +1,3 @@
-// src/components/Signin.js
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -9,13 +8,15 @@ import {
   ToastAndroid,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import { signInWithEmail, signInWithGoogle } from "../../../services/auth"; // Import authentication functions
+import { signInWithEmail } from "../../../services/auth";
+import { useGoogleAuth } from "../../../services/auth"; // Import the useGoogleAuth hook
 
 const Signin = () => {
   const navigation = useNavigation();
   const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { promptAsync } = useGoogleAuth(); // Use the custom hook for Google Sign-In
 
   // Function to handle sign-in with email and password
   const handleSignIn = async () => {
@@ -33,18 +34,7 @@ const Signin = () => {
     }
   };
 
-  // Function to handle Google Sign-In
-  const handleGoogleSignIn = async () => {
-    try {
-      const user = await signInWithGoogle();
-      console.log(user);
-      route.navigate("/mytrip");
-    } catch (error) {
-      ToastAndroid.show(error.message, ToastAndroid.SHORT);
-      console.log(error.code, error.message);
-    }
-  };
-
+  // Hide the header when the screen is mounted
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -54,6 +44,7 @@ const Signin = () => {
   return (
     <SafeAreaView className="flex-1 pt-6 px-4 bg-white">
       <View className="mt-10">
+        {/* Sign-in Header */}
         <Text
           className="font-bold text-center"
           style={{ fontFamily: "outfitBold", fontSize: 30 }}
@@ -74,6 +65,7 @@ const Signin = () => {
         </Text>
       </View>
 
+      {/* Form Inputs */}
       <View className="mt-16 space-y-6">
         <View>
           <Text
@@ -109,6 +101,7 @@ const Signin = () => {
           />
         </View>
 
+        {/* Sign-In Button */}
         <TouchableOpacity
           className="bg-blue-600 rounded-lg py-4 mt-10 items-center"
           onPress={handleSignIn}
@@ -121,9 +114,10 @@ const Signin = () => {
           </Text>
         </TouchableOpacity>
 
+        {/* Google Sign-In Button */}
         <TouchableOpacity
           className="bg-red-600 rounded-lg py-4 mt-4 items-center"
-          onPress={handleGoogleSignIn}
+          onPress={() => promptAsync()} // Trigger Google Sign-In
         >
           <Text
             className="text-white font-bold"
@@ -133,6 +127,7 @@ const Signin = () => {
           </Text>
         </TouchableOpacity>
 
+        {/* Forgot Password Link */}
         <TouchableOpacity
           className="items-center mt-4"
           onPress={() => {
@@ -148,6 +143,7 @@ const Signin = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Footer */}
       <View className="absolute bottom-4 w-full items-center">
         <View className="flex flex-row items-center">
           <Text

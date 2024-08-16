@@ -50,3 +50,30 @@ export const SelectTravelersList = [
     people: "1-⬆️",
   },
 ];
+
+export const budget = [
+  {
+    id: 1,
+    title: "$0 - $500",
+    desc: "Budget-friendly",
+    image: require("../assets/images/budgetFriendly.png"),
+  },
+  {
+    id: 2,
+    title: "$500 - $1000",
+    desc: "Moderate budget",
+    image: require("../assets/images/money.png"),
+  },
+  {
+    id: 3,
+    title: "$1000 - $1500",
+    desc: "High budget",
+    image: require("../assets/images/highBudget.png"),
+  },
+  {
+    id: 4,
+    title: "$1500+",
+    desc: "Luxury",
+    image: require("../assets/images/luxury.png"),
+  },
+];

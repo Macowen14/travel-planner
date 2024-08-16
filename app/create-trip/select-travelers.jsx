@@ -1,3 +1,5 @@
+// Travelers.js
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -5,44 +7,60 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  ToastAndroid,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { SelectTravelersList } from "../../constants/Options";
 import TravelPlanCard from "../../components/TravelPlanCard";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { CreateTripContext } from "../../context/CreateTripContext";
 
 const Travelers = () => {
+  // Get navigation object from react-navigation
   const navigation = useNavigation();
-  const { tripData, setTripData } = useContext(CreateTripContext);
+  const router = useRouter();
+
+  const { tripData, updateTripData } = useContext(CreateTripContext);
   const [selectedId, setSelectedId] = useState(null);
+  const [plan, setPlan] = useState([]);
 
   useEffect(() => {
+    // Hide header for this screen
     navigation.setOptions({
       headerShown: false,
     });
+    // Show a Toast message to guide the user
+    ToastAndroid.show("Select Travelers to proceed", ToastAndroid.LONG);
   }, []);
 
+  // Handle when a travel plan card is pressed
   const handleCardPress = (item) => {
-    setSelectedId(item.id);
+    setSelectedId(item.id); // Set the selected traveler's ID
+    setPlan({
+      title: item.title,
+      estimate: item.people,
+    }); // Update the plan with the selected traveler's information'
+    console.log("selected plan ", plan);
+  };
 
-    // Check if tripData has any objects
-    if (tripData.length > 0) {
-      // Copy current tripData and update the last object
-      const updatedTripData = [...tripData];
-      const lastIndex = updatedTripData.length - 1;
+  // Handle continue button press
+  const handleContinuePress = () => {
+    if (selectedId === null) {
+      Alert.alert("Please select at least one traveler plan");
+    } else {
+      console.log("Updating trip data with:", plan); // Log the plan being updated
+      updateTripData({
+        travelPlan: { estimate: plan.estimate, title: plan.title },
+      });
 
-      updatedTripData[lastIndex] = {
-        ...updatedTripData[lastIndex],
-        title: item.title,
-        estimate: item.people,
-      };
+      // Log the updated tripData after context update
+      setTimeout(() => {
+        console.log("Updated tripData:", tripData);
+      }, 100);
 
-      // Update the context with new tripData
-      setTripData(updatedTripData);
-
-      console.log(tripData);
+      // Navigate to the next screen
+      router.push("/create-trip/select-date");
     }
   };
 
@@ -50,7 +68,7 @@ const Travelers = () => {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.goBack()} // Go back to the previous screen
       >
         <AntDesign name="arrowleft" size={24} color="black" />
       </TouchableOpacity>
@@ -60,7 +78,7 @@ const Travelers = () => {
       </View>
 
       <FlatList
-        data={SelectTravelersList}
+        data={SelectTravelersList} // Data for FlatList
         renderItem={({ item }) => (
           <TravelPlanCard
             item={item}
@@ -71,24 +89,23 @@ const Travelers = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
       />
-      <View className="bg-tintLight rounded-t-3xl w-full h-32 items-center justify-center">
-        <TouchableOpacity className="bg-background rounded-3xl min-w-[300px] py-3 items-center">
-          <Link href="/create-trip/select-date" className="text-center">
-            <Text className="text-white font-outfitMedium text-medium text-base">
-              Continue
-            </Text>
-          </Link>
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={styles.continueButton}
+          onPress={handleContinuePress} // Handle continue button press
+        >
+          <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 29,
-
     backgroundColor: "#f8f9fa",
     position: "relative",
   },
@@ -120,6 +137,25 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 16,
     paddingHorizontal: 16,
+  },
+  footer: {
+    backgroundColor: "#f8f9fa",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 16,
+    alignItems: "center",
+  },
+  continueButton: {
+    backgroundColor: "#009688",
+    borderRadius: 24,
+    minWidth: 300,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  continueText: {
+    color: "#fff",
+    fontFamily: "outfitMedium",
+    fontSize: 16,
   },
 });
 
