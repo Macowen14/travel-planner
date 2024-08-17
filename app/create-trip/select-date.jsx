@@ -8,6 +8,7 @@ import {
   StatusBar,
   Platform,
   TextInput,
+  TextInput,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useNavigation } from "expo-router";
@@ -20,6 +21,8 @@ const SelectDate = () => {
   const [showPicker, setShowPicker] = useState(false);
   const navigation = useNavigation();
   const { tripData, updateTripData } = useContext(CreateTripContext);
+  const [days, setDays] = useState(1);
+  const [nights, setNights] = useState(1);
   const [days, setDays] = useState(1);
   const [nights, setNights] = useState(1);
 
@@ -53,6 +56,7 @@ const SelectDate = () => {
       </TouchableOpacity>
 
       <View style={styles.header}>
+        <Text style={styles.headerText}>Select the Start Travel Date</Text>
         <Text style={styles.headerText}>Select the Start Travel Date</Text>
       </View>
 
@@ -103,6 +107,9 @@ const SelectDate = () => {
         <Text style={styles.setDateButtonText}>
           Set Start Date, Days, and Nights
         </Text>
+        <Text style={styles.setDateButtonText}>
+          Set Start Date, Days, and Nights
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -132,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#fff",
     fontFamily: "outfitBold",
+    textAlign: "center",
     textAlign: "center",
   },
   datePickerButton: {

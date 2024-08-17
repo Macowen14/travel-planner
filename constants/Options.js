@@ -40,14 +40,14 @@ export const SelectTravelersList = [
     title: "Group Tour",
     desc: "Traveling as part of an organized group tour",
     image: require("../assets/images/park.png"),
-    people: "5-⬆️",
+    people: "5-10",
   },
   {
     id: 7,
     title: "Other",
     desc: "Other",
     image: require("../assets/images/swimmer.png"),
-    people: "1-⬆️",
+    people: "1-10",
   },
 ];
 

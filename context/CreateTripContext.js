@@ -11,6 +11,7 @@ export const ContextProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null); // Initialize userDetails state
 
   // Function to add or update trip data
+
   const updateTripData = (newData) => {
     setTripData((prevData) => ({
       ...prevData,

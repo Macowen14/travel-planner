@@ -18,6 +18,8 @@ const ReviewTrip = () => {
   const navigation = useNavigation();
   const { tripData } = useContext(CreateTripContext);
 
+  console.log(tripData);
+
   if (tripData.length === 0) {
     return (
       <SafeAreaView className="flex-1 bg-gray-100 pt-4">
@@ -61,7 +63,11 @@ const ReviewTrip = () => {
               Travel Location
             </Text>
             <Text className="text-gray-700 font-medium text-lg">
+<<<<<<< HEAD
               {tripData["0"]?.name || "No location data"}
+=======
+              {tripData.name || "No location data"}
+>>>>>>> 62c32ef3b0f0d3b06885f110be5d3032d51b04a7
             </Text>
           </View>
         </View>
@@ -107,7 +113,12 @@ const ReviewTrip = () => {
           </View>
         </View>
         <Text className="text-gray-600 font-medium">
+<<<<<<< HEAD
           Estimated Duration: {tripData.travelPlan?.estimate || "No estimate"}
+=======
+          Estimated Duration: {tripData?.days || "No days"} days and{" "}
+          {tripData?.nights || "No nights"} nights
+>>>>>>> 62c32ef3b0f0d3b06885f110be5d3032d51b04a7
         </Text>
       </ScrollView>
 

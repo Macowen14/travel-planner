@@ -14,8 +14,7 @@ import { CreateTripContext } from "../../context/CreateTripContext";
 import { useNavigation, useRouter } from "expo-router";
 
 // Mapbox API key
-const MAP_API_KEY =
-  "pk.eyJ1IjoibWFjb3dlbiIsImEiOiJjbHpzdXNjNmcxeW8yMnFyN2J0N254amVtIn0.IkYs37mr1m7HeIzf0r4Yeg";
+const MAP_API_KEY = process.env.EXPO_PUBLIC_MAPBOX_API_KEY;
 
 const SearchPlace = () => {
   const [query, setQuery] = useState("");
