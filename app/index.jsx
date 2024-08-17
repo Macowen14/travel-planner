@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 import Welcome from "../components/Welcome";
 import { auth } from "../configs/firebase";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import LottieView from "lottie-react-native";
 
 export default function Index() {
   const [loading, setLoading] = useState(true); // State to manage loading
@@ -13,7 +14,7 @@ export default function Index() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         // Navigate to '/mytrip' if user is authenticated
-        router.push("/mytrip" as Href<string>);
+        router.push("/mytrip");
       } else {
         // Set loading to false if no user
         setLoading(false);
@@ -33,7 +34,12 @@ export default function Index() {
           alignItems: "center",
         }}
       >
-        <ActivityIndicator size="large" color="#0000ff" />
+        <LottieView
+          source={require("../assets/animation/loading.json")}
+          autoPlay
+          loop
+          style={{ width: 150, height: 150 }}
+        />
       </View>
     );
   }

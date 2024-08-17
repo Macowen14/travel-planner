@@ -77,3 +77,15 @@ export const budget = [
     image: require("../assets/images/luxury.png"),
   },
 ];
+export const AI_PROMPT = `
+Generate a travel itinerary for a trip to {location} for {totalDays} days and {totalNights} nights with a budget of {budget}. 
+The trip starts on {startDate} and is for {estimate} {travellers}.
+
+Please include:
+1. Transportation options (flight or bus with prices and booking links).
+2. Hotel options (name, price, address, rating, nearby places).
+3. Tourist attractions (name, description, image URL, ticket prices, best times to visit).
+4. A daily schedule (places to visit each day with estimated travel times).
+
+Note:Output in a clear JSON format.
+`;

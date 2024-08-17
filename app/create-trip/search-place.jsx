@@ -62,11 +62,15 @@ const SearchPlace = () => {
 
       const data = await response.json();
       console.log(data);
-      const places = data.features.map((feature) => ({
-        id: feature.id,
-        name: feature.place_name,
-        geometry: feature.geometry,
-      }));
+
+      // Ensure we get an array or default to an empty array
+      const places =
+        data.features?.map((feature) => ({
+          id: feature.id,
+          name: feature.place_name,
+          geometry: feature.geometry,
+        })) || [];
+
       setSuggestions(places);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
@@ -80,7 +84,6 @@ const SearchPlace = () => {
 
   const handleSelectPlace = (place) => {
     console.log("Selected place:", place);
-    console.log(typeof place);
 
     // Check if place and its properties are defined
     if (
@@ -94,9 +97,9 @@ const SearchPlace = () => {
       return;
     }
 
-    // Add the selected place to the trips array
-    setTripData([
-      ...tripData,
+    // Add the selected place to the trips array, ensuring tripData is an array
+    setTripData((prevData) => [
+      ...(Array.isArray(prevData) ? prevData : []),
       {
         id: place.id,
         name: place.name,

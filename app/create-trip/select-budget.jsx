@@ -5,27 +5,27 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useNavigation } from "expo-router";
 import { budget } from "../../constants/Options";
 import BudgetCard from "../../components/BudgetCard";
-import { useContext } from "react";
 import { CreateTripContext } from "../../context/CreateTripContext";
 
 const Budget = () => {
   const [selectedBudget, setSelectedBudget] = useState(null); // State to track the selected budget
   const navigation = useNavigation();
-  const [budgetOption, setBudgetOtion] = useState(budget); // State to hold the budget options]
   const { updateTripData } = useContext(CreateTripContext); // Get the updateTripData function from context
 
   const handleContinue = () => {
-    if (selectedBudget) {
-      console.log(budgetOption);
+    if (selectedBudget !== null) {
+      // Use the selectedBudget index to fetch the correct item from the budget array
+      const selectedOption = budget[selectedBudget];
 
       updateTripData({
-        budget: { desc: budgetOption.desc, amount: budgetOption.title },
+        budget: { desc: selectedOption.desc, amount: selectedOption.title },
       }); // Update the trip data with the selected budget
+
       // Navigate to the next step of the trip setup
       router.push("/create-trip/review-trip");
     } else {
@@ -62,16 +62,13 @@ const Budget = () => {
             key={index}
             item={item}
             isSelected={selectedBudget === index}
-            onPress={() => {
-              setBudgetOtion(item);
-              setSelectedBudget(index);
-            }}
+            onPress={() => setSelectedBudget(index)} // Update only selectedBudget
           />
         ))}
       </ScrollView>
 
       {/* Continue Button */}
-      <View className="bg-amber-100 w-full h-32 rounded-t-3xl items-center justify-center ">
+      <View className="bg-amber-100 w-full h-28 rounded-t-3xl items-center justify-center ">
         <Text className="text-gray-700 text-base">Have a budget in mind?</Text>
         <TouchableOpacity
           className="bg-tintLight py-3 px-6 w-[60%] rounded-lg shadow-md"

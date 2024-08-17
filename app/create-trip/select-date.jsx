@@ -7,6 +7,7 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
+  TextInput,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useNavigation } from "expo-router";
@@ -19,6 +20,8 @@ const SelectDate = () => {
   const [showPicker, setShowPicker] = useState(false);
   const navigation = useNavigation();
   const { tripData, updateTripData } = useContext(CreateTripContext);
+  const [days, setDays] = useState(1);
+  const [nights, setNights] = useState(1);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -27,8 +30,15 @@ const SelectDate = () => {
   };
 
   const handleSetDate = () => {
-    updateTripData({ date: dayjs(date).format("YYYY-MM-DD") });
-    console.log("Updated Trip Data:", tripData);
+    updateTripData({
+      date: dayjs(date).format("YYYY-MM-DD"),
+      days: parseInt(days, 10),
+      nights: parseInt(nights, 10),
+    });
+    setTimeout(() => {
+      console.log("Updated Trip Data:", tripData);
+    }, 0);
+
     router.push("/create-trip/select-budget");
   };
 
@@ -43,7 +53,7 @@ const SelectDate = () => {
       </TouchableOpacity>
 
       <View style={styles.header}>
-        <Text style={styles.headerText}>Select Travel Date</Text>
+        <Text style={styles.headerText}>Select the Start Travel Date</Text>
       </View>
 
       <TouchableOpacity
@@ -64,8 +74,35 @@ const SelectDate = () => {
         />
       )}
 
+      <View style={styles.inputGroup} clasName="gap-5">
+        <View clasName="flex-col items-center">
+          <Text style={styles.label}>Days</Text>
+          <TextInput
+            placeholder="Enter days"
+            keyboardType="numeric"
+            placeholderTextColor={"gray"}
+            style={styles.input}
+            onChangeText={(text) => setDays(text)}
+            value={days.toString()}
+          />
+        </View>
+        <View clasName="flex-col">
+          <Text style={styles.label}>Nights</Text>
+          <TextInput
+            placeholder="Enter nights"
+            keyboardType="numeric"
+            placeholderTextColor={"gray"}
+            style={styles.input}
+            onChangeText={(text) => setNights(text)}
+            value={nights.toString()}
+          />
+        </View>
+      </View>
+
       <TouchableOpacity style={styles.setDateButton} onPress={handleSetDate}>
-        <Text style={styles.setDateButtonText}>Set Date</Text>
+        <Text style={styles.setDateButtonText}>
+          Set Start Date, Days, and Nights
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -95,6 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#fff",
     fontFamily: "outfitBold",
+    textAlign: "center",
   },
   datePickerButton: {
     backgroundColor: "#fff",
@@ -106,6 +144,28 @@ const styles = StyleSheet.create({
     color: "#1e3a5f",
     fontSize: 18,
     fontFamily: "outfitBold",
+  },
+  inputGroup: {
+    width: "80%",
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  label: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "outfitMedium",
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 10,
+    fontSize: 16,
+    width: "70%",
+    textAlign: "center",
+    fontFamily: "outfitMedium",
+    color: "#1e3a5f",
   },
   setDateButton: {
     backgroundColor: "#009688",

@@ -10,40 +10,54 @@ import {
 } from "react-native";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../configs/firebase";
+import { setDoc } from "firebase/firestore";
+import { db } from "../../../configs/firebase";
 
 const SignupPage = () => {
   const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState(""); // Add state for username
 
-  // Function to handle user sign up
-  const handleSignUp = () => {
-    if (email.length === 0 || password.length === 0 || fullname.length === 0) {
+  const handleSignUp = async () => {
+    if (
+      email.length === 0 ||
+      password.length === 0 ||
+      fullname.length === 0 ||
+      username.length === 0
+    ) {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.TOP);
-    } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up successfully
-          const user = userCredential.user;
-          console.log("User signed up:", user);
+      return;
+    }
 
-          // // Optionally update the user's profile to include the full name
-          // user
-          //   .updateProfile({
-          //     displayName: fullname,
-          //   })
-          //   .then(() => {
-          //     console.log("Full name set successfully.");
-          //   })
-          //   .catch((error) => {
-          //     console.error("Error updating profile:", error);
-          //   });
-        })
-        .catch((error) => {
-          // Handle errors here
-          console.error("Error signing up:", error.code, error.message);
-        });
+    try {
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Update user profile with display name (username)
+      await updateProfile(user, { displayName: username });
+      console.log("User profile updated with username:", username);
+
+      await setDoc(doc(db, "UsersTrips", user.uid), {
+        email: user.email,
+        displayName: username,
+        fullName: fullname,
+      });
+      console.log("User info saved to Firestore");
+
+      // Optionally, navigate to another screen or show a success message
+    } catch (error) {
+      console.error("Error signing up:", error.code, error.message);
+      ToastAndroid.show(
+        "Error signing up. Please try again.",
+        ToastAndroid.TOP
+      );
     }
   };
 
@@ -57,6 +71,13 @@ const SignupPage = () => {
         Create Your Account
       </Text>
       <View className="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
+        <TextInput
+          className="border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 bg-gray-50"
+          placeholder="Username"
+          placeholderTextColor="#6B7280"
+          value={username}
+          onChangeText={setUsername} // Directly updating the username state
+        />
         <TextInput
           className="border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 bg-gray-50"
           placeholder="Full Name"
