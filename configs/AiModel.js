@@ -1,11 +1,35 @@
+// // Import OpenAI SDK
+// import { Configuration, OpenAIApi } from "openai";
+
+// // Configure OpenAI API
+// const configuration = new Configuration({
+//   apiKey: process.env.OPENAI_API_KEY, // Make sure this is set in your environment variables
+// });
+
+// const openai = new OpenAIApi(configuration);
+
+// const generationConfig = {
+//   temperature: 1,
+//   top_p: 0.95,
+//   max_tokens: 8192,
+// };
+
+// export { openai, generationConfig };
+
+// Comments for reference:
+// /*
+//  * Install the Generative AI SDK
+//  * $ npm install @google/generative-ai
+//  */
+//
 const {
   GoogleGenerativeAI,
   HarmCategory,
   HarmBlockThreshold,
 } = require("@google/generative-ai");
 
-const apiKey = process.env.EXPO_PUBLIC_GOOGLE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
+const apiKey = "AIzaSyArEiEI4Bov3NizvhkK755SjKddvQ2jP4k";
+const genAI = new GoogleGenerativeAI({ apiKey });
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
@@ -21,10 +45,4 @@ const generationConfig = {
 
 export const chatSession = model.startChat({
   generationConfig,
-  // safetySettings: Adjust safety settings
-  // See https://ai.google.dev/gemini-api/docs/safety-settings
-  history: [],
 });
-
-// const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
-// console.log(result.response.text());

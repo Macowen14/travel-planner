@@ -63,8 +63,8 @@ const Budget = () => {
             item={item}
             isSelected={selectedBudget === index}
             onPress={() => {
-              setBudgetOtion(item);
               setSelectedBudget(index);
+              setBudgetOtion(item);
             }}
           />
         ))}

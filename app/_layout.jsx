@@ -1,7 +1,8 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ContextProvider } from "../context/CreateTripContext";
+import LottieView from "lottie-react-native";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -15,7 +16,12 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text>Loading...</Text>
+        <LottieView
+          source={require("../assets/animation/loading.json")}
+          autoPlay
+          loop
+          style={styles.lottie}
+        />
       </View>
     );
   }
@@ -28,3 +34,10 @@ export default function RootLayout() {
     </ContextProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  lottie: {
+    width: 150,
+    height: 150,
+  },
+});

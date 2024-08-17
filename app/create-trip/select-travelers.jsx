@@ -30,8 +30,6 @@ const Travelers = () => {
     navigation.setOptions({
       headerShown: false,
     });
-    // Show a Toast message to guide the user
-    ToastAndroid.show("Select Travelers to proceed", ToastAndroid.LONG);
   }, []);
 
   // Handle when a travel plan card is pressed
@@ -41,7 +39,6 @@ const Travelers = () => {
       title: item.title,
       estimate: item.people,
     }); // Update the plan with the selected traveler's information'
-    console.log("selected plan ", plan);
   };
 
   // Handle continue button press
@@ -56,7 +53,7 @@ const Travelers = () => {
 
       // Log the updated tripData after context update
       setTimeout(() => {
-        console.log("Updated tripData:", tripData);
+        console.log("Updated tripData in travelers:", tripData);
       }, 100);
 
       // Navigate to the next screen

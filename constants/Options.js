@@ -40,14 +40,14 @@ export const SelectTravelersList = [
     title: "Group Tour",
     desc: "Traveling as part of an organized group tour",
     image: require("../assets/images/park.png"),
-    people: "5-⬆️",
+    people: "5-10",
   },
   {
     id: 7,
     title: "Other",
     desc: "Other",
     image: require("../assets/images/swimmer.png"),
-    people: "1-⬆️",
+    people: "1-10",
   },
 ];
 
@@ -77,3 +77,16 @@ export const budget = [
     image: require("../assets/images/luxury.png"),
   },
 ];
+
+export const AI_PROMPT = `
+Generate a travel itinerary for a trip to {destination} for {totalDays} days and {totalNights} nights with a budget of {budget}. 
+The trip starts on {startDate} and is for {estimate} {travellers}.
+
+Please include:
+1. Transportation options (flight or bus with prices and booking links).
+2. Hotel options (name, price, address, rating, nearby places).
+3. Tourist attractions (name, description, image URL, ticket prices, best times to visit).
+4. A daily schedule (places to visit each day with estimated travel times).
+
+Note : output should be in a clear JSON format.
+`;
