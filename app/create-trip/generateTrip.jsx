@@ -96,9 +96,11 @@ const LoadingAnimation = () => {
             style={styles.lottie}
           />
 
-      <Text className="text-slate-500 font-outfitMedium text-center">
-        Do not go away. Kindly wait as we generate your trip.
-      </Text>
+          <Text className="text-slate-500 font-outfitMedium text-center">
+            Do not go away. Kindly wait as we generate your trip.
+          </Text>
+        </>
+      )}
     </SafeAreaView>
   );
 };

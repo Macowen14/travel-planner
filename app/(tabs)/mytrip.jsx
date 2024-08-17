@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,17 @@ import { StatusBar } from "expo-status-bar";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import StartTripCard from "../../components/StartTripCard";
 import { useRouter } from "expo-router";
+import { CreateTripContext } from "../../context/CreateTripContext";
 
 const MyTrip = () => {
+  const { userData } = useContext(CreateTripContext);
   const [userTrips, setUserTrips] = useState([]);
   const router = useRouter();
 
+  if ((userData = [])) {
+    router.push("/(auth)/signin");
+    return;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>

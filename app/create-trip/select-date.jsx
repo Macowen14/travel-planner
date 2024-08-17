@@ -8,7 +8,6 @@ import {
   StatusBar,
   Platform,
   TextInput,
-  TextInput,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useNavigation } from "expo-router";
@@ -21,8 +20,7 @@ const SelectDate = () => {
   const [showPicker, setShowPicker] = useState(false);
   const navigation = useNavigation();
   const { tripData, updateTripData } = useContext(CreateTripContext);
-  const [days, setDays] = useState(1);
-  const [nights, setNights] = useState(1);
+
   const [days, setDays] = useState(1);
   const [nights, setNights] = useState(1);
 

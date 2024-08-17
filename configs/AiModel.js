@@ -45,7 +45,7 @@ const generationConfig = {
 
 export const chatSession = model.startChat({
   generationConfig,
-<<<<<<< HEAD
+
   // safetySettings: Adjust safety settings
   // See https://ai.google.dev/gemini-api/docs/safety-settings
   history: [
@@ -66,6 +66,4 @@ export const chatSession = model.startChat({
       ],
     },
   ],
-=======
->>>>>>> 62c32ef3b0f0d3b06885f110be5d3032d51b04a7
 });

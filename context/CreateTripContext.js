@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
-import { auth } from "../configs/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../configs/firebase";
+import { useRouter } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 
 // Create a Context
@@ -7,43 +9,84 @@ export const CreateTripContext = createContext();
 
 // Create a Provider Component
 export const ContextProvider = ({ children }) => {
-  const [tripData, setTripData] = useState({}); // Initialize as an object
-  const [userDetails, setUserDetails] = useState(null); // Initialize userDetails state
+  const [tripData, setTripData] = useState({});
+  const [userData, setUserData] = useState(null); // Changed initial state to null
+  const router = useRouter();
 
   // Function to add or update trip data
-
   const updateTripData = (newData) => {
     setTripData((prevData) => ({
       ...prevData,
-      ...newData, // Properly merge the new data with existing state
+      ...newData,
     }));
   };
 
-  // Function to fetch user details
-  const fetchUserDetails = (user) => {
-    if (user) {
-      // Fetch user details from Firebase
-      const { email, displayName } = user;
-      setUserDetails({ email, name: displayName });
-    } else {
-      // No user is signed in
-      setUserDetails(null);
+  // Function to load user data from Firestore and handle navigation
+  const loadUserData = async (uid) => {
+    try {
+      const userRef = doc(db, "UsersTrips", uid); // Reference to the user's document
+      const userSnap = await getDoc(userRef); // Fetch the user document
+      const userData = userSnap.data(); // Extract the user data
+
+      setUserData(userData); // Update the userData state
+    } catch (err) {
+      console.error("Error loading user data:", err);
     }
   };
 
-  // Listen for authentication state changes
+  // Listen to authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      fetchUserDetails(user);
+      if (user) {
+        loadUserData(user.uid);
+      } else {
+        // Optionally handle cases where the user is not authenticated
+        router.push("/(auth)/signin");
+      }
     });
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, [router]);
+
+  const updateUserDetails = async ({ username, avatar, fullname, email }) => {
+    try {
+      const userId = auth.currentUser?.uid;
+      if (userId) {
+        // Update user data in Firestore
+        await updateDoc(doc(db, "UsersTrips", userId), {
+          displayName: username,
+          avatar,
+          fullName: fullname,
+          email,
+        });
+
+        // Update user data in the local state
+        setUserData((prevData) => ({
+          ...prevData,
+          displayName: username,
+          avatar,
+          fullName: fullname,
+          email,
+        }));
+      } else {
+        console.error("No user is currently authenticated.");
+      }
+    } catch (err) {
+      console.error("Error updating user details:", err);
+    }
+  };
 
   return (
     <CreateTripContext.Provider
-      value={{ tripData, setTripData, updateTripData, userDetails }}
+      value={{
+        tripData,
+        setTripData,
+        updateTripData,
+        loadUserData,
+        userData,
+        updateUserDetails,
+        userId: auth.currentUser?.uid, // Added userId to the context provider for accessing user data in other components
+      }}
     >
       {children}
     </CreateTripContext.Provider>

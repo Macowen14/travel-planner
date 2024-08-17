@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../configs/firebase";
-import { setDoc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import { db } from "../../../configs/firebase";
 
 const SignupPage = () => {
@@ -33,25 +33,20 @@ const SignupPage = () => {
 
     try {
       // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Update user profile with display name (username)
-      await updateProfile(user, { displayName: username });
-      console.log("User profile updated with username:", username);
-
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      // Save user data to Firestore with the correct displayName and fullName
       await setDoc(doc(db, "UsersTrips", user.uid), {
-        email: user.email,
+        id: user.uid,
+        email,
         displayName: username,
         fullName: fullname,
+        avartar: "",
+        trips: [],
       });
       console.log("User info saved to Firestore");
 
-      // Optionally, navigate to another screen or show a success message
+      route.back();
     } catch (error) {
       console.error("Error signing up:", error.code, error.message);
       ToastAndroid.show(

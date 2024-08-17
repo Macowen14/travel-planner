@@ -62,14 +62,7 @@ const Budget = () => {
             key={index}
             item={item}
             isSelected={selectedBudget === index}
-<<<<<<< HEAD
             onPress={() => setSelectedBudget(index)} // Update only selectedBudget
-=======
-            onPress={() => {
-              setSelectedBudget(index);
-              setBudgetOtion(item);
-            }}
->>>>>>> 62c32ef3b0f0d3b06885f110be5d3032d51b04a7
           />
         ))}
       </ScrollView>
