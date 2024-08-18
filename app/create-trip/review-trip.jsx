@@ -63,8 +63,7 @@ const ReviewTrip = () => {
               Travel Location
             </Text>
             <Text className="text-gray-700 font-medium text-lg">
-              {tripData["0"]?.name || "No location data"}=
-              {tripData.name || "No location data"}
+              {tripData["0"]?.name || "No location data"}
             </Text>
           </View>
         </View>

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { StyleSheet, Text, SafeAreaView, Alert } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, Alert, View } from "react-native";
 import LottieView from "lottie-react-native";
 import { chatSession } from "../../configs/AiModel";
 import { auth, db } from "../../configs/firebase";
@@ -9,6 +9,7 @@ import { CreateTripContext } from "../../context/CreateTripContext";
 
 const LoadingAnimation = () => {
   const { tripData } = useContext(CreateTripContext);
+  const [loading, setLoading] = useState(true);
 
   const saveTripData = async (aiResponse) => {
     const user = auth.currentUser;
@@ -73,6 +74,7 @@ const LoadingAnimation = () => {
       }
     } catch (error) {
       console.error("Error generating AI trip:", error);
+      setLoading(!loading);
       Alert.alert("Error", "There was an issue generating your trip.");
     }
   };
@@ -85,7 +87,7 @@ const LoadingAnimation = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading && (
+      {loading ? (
         <>
           <Text style={styles.text}>Generating Trip</Text>
           <Text style={styles.subText}>Please wait .....</Text>
@@ -99,6 +101,14 @@ const LoadingAnimation = () => {
           <Text className="text-slate-500 font-outfitMedium text-center">
             Do not go away. Kindly wait as we generate your trip.
           </Text>
+        </>
+      ) : (
+        <>
+          <View className="flex-1 items-center justify-center">
+            <Text className="font-outfitRegular text-lg text-slate-500">
+              If not redirected go back and try regenerating the trip again
+            </Text>
+          </View>
         </>
       )}
     </SafeAreaView>

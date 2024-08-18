@@ -87,5 +87,5 @@ Please include:
 3. Tourist attractions (name, description, image URL, ticket prices, best times to visit).
 4. A daily schedule (places to visit each day with estimated travel times).
 
-Note:Output in a clear JSON format.
+Note: Output in a clear JSON format.
 `;

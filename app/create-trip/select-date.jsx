@@ -55,7 +55,6 @@ const SelectDate = () => {
 
       <View style={styles.header}>
         <Text style={styles.headerText}>Select the Start Travel Date</Text>
-        <Text style={styles.headerText}>Select the Start Travel Date</Text>
       </View>
 
       <TouchableOpacity
@@ -102,9 +101,6 @@ const SelectDate = () => {
       </View>
 
       <TouchableOpacity style={styles.setDateButton} onPress={handleSetDate}>
-        <Text style={styles.setDateButtonText}>
-          Set Start Date, Days, and Nights
-        </Text>
         <Text style={styles.setDateButtonText}>
           Set Start Date, Days, and Nights
         </Text>

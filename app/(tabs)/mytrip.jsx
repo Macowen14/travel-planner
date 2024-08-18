@@ -17,10 +17,6 @@ const MyTrip = () => {
   const [userTrips, setUserTrips] = useState([]);
   const router = useRouter();
 
-  if ((userData = [])) {
-    router.push("/(auth)/signin");
-    return;
-  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
