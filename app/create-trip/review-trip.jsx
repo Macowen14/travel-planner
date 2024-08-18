@@ -4,10 +4,11 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useContext } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { router, useNavigation } from "expo-router";
+import { router, useNavigation, useRouter } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import { CreateTripContext } from "../../context/CreateTripContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,7 +17,30 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 const ReviewTrip = () => {
   const navigation = useNavigation();
-  const { tripData } = useContext(CreateTripContext);
+  const { tripData, setTripData } = useContext(CreateTripContext);
+  const router = useRouter();
+
+  const handleReturnHome = () => {
+    console.log("home button clicked");
+    Alert.alert(
+      "Return Home",
+      "Are you sure you want to return home?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            router.push("/(tabs)/mytrip");
+            console.log("returned to home");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   console.log(tripData);
 
@@ -26,6 +50,12 @@ const ReviewTrip = () => {
         <TouchableOpacity
           className="p-3 rounded-full absolute top-8 left-5 bg-teal-500"
           onPress={() => navigation.goBack()}
+        >
+          <Entypo name="home" size={24} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="p-3 rounded-full absolute top-8 right-4 bg-teal-500"
+          onPress={handleReturnHome}
         >
           <AntDesign name="arrowleft" size={24} color="white" />
         </TouchableOpacity>
@@ -47,6 +77,12 @@ const ReviewTrip = () => {
       >
         <AntDesign name="arrowleft" size={24} color="white" />
       </TouchableOpacity>
+      <TouchableOpacity
+        className="p-3 rounded-full absolute top-8 right-4 bg-teal-500"
+        onPress={handleReturnHome}
+      >
+        <Entypo name="home" size={24} color="white" />
+      </TouchableOpacity>
       <Text className="mt-10 font-bold text-center text-3xl text-teal-600">
         Review Your Trip
       </Text>
@@ -55,7 +91,7 @@ const ReviewTrip = () => {
         your trip.
       </Text>
 
-      <ScrollView className="mt-8 px-4">
+      <ScrollView className="mt-8 px-4" showsVerticalScrollIndicator={true}>
         <View className="flex flex-row items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-lg">
           <Entypo name="location-pin" size={36} color="teal" />
           <View className="flex-1 ml-4">
@@ -115,7 +151,7 @@ const ReviewTrip = () => {
         </Text>
       </ScrollView>
 
-      <View className="items-center">
+      <View className="items-center py-3 rounded-t-3xl">
         <TouchableOpacity
           className="bg-teal-500 py-4 shadow-md text-white text-center font-bold w-[70vw] rounded-xl"
           onPress={() => router.push("/create-trip/generateTrip")}

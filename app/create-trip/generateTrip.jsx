@@ -26,7 +26,6 @@ const LoadingAnimation = () => {
       await setDoc(tripDocRef, {
         tripData: tripData,
         travelPlan: aiResponse, // Store the AI-generated response
-        createdAt: new Date().toISOString(), // Optional: add a timestamp
       });
       Alert.alert("Success", "Your trip has been saved successfully!");
     } catch (error) {

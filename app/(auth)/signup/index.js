@@ -19,6 +19,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState(""); // Add state for username
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     if (
@@ -32,6 +33,7 @@ const SignupPage = () => {
     }
 
     try {
+      setLoading(true);
       // Create user with email and password
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
@@ -45,7 +47,7 @@ const SignupPage = () => {
         trips: [],
       });
       console.log("User info saved to Firestore");
-
+      setLoading(false);
       route.back();
     } catch (error) {
       console.error("Error signing up:", error.code, error.message);
@@ -53,6 +55,7 @@ const SignupPage = () => {
         "Error signing up. Please try again.",
         ToastAndroid.TOP
       );
+      setLoading(false);
     }
   };
 
@@ -99,6 +102,7 @@ const SignupPage = () => {
         <TouchableOpacity
           className="bg-blue-600 py-4 rounded-lg shadow-md"
           onPress={handleSignUp} // Calling the handleSignUp function on press
+          disabled={loading}
         >
           <Text className="text-white text-center text-lg font-bold">
             Sign Up

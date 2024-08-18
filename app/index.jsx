@@ -34,6 +34,9 @@ export default function Index() {
           alignItems: "center",
         }}
       >
+        <Text className="text-slate-500 text-center font-outfitRegular">
+          Loading auth status ....
+        </Text>
         <LottieView
           source={require("../assets/animation/loading.json")}
           autoPlay

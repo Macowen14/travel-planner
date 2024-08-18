@@ -5,12 +5,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
+  StatusBar,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import StartTripCard from "../../components/StartTripCard";
 import { useRouter } from "expo-router";
 import { CreateTripContext } from "../../context/CreateTripContext";
+import UserTripList from "../../components/UserTripList";
 
 const MyTrip = () => {
   const { userData } = useContext(CreateTripContext);
@@ -19,6 +19,7 @@ const MyTrip = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={"dark-content"} />
       <View style={styles.headerContainer}>
         <Text style={styles.title}>My Trips</Text>
         <TouchableOpacity
@@ -28,7 +29,7 @@ const MyTrip = () => {
         </TouchableOpacity>
       </View>
 
-      {userTrips.length === 0 ? <StartTripCard /> : null}
+      {userTrips.length === 0 ? <UserTripList /> : null}
     </SafeAreaView>
   );
 };
@@ -36,9 +37,9 @@ const MyTrip = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 30,
     backgroundColor: "#fff",
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
   },
   headerContainer: {
     flexDirection: "row",
