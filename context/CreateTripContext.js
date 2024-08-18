@@ -3,6 +3,8 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../configs/firebase";
 import { useRouter } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
+import { Alert } from "react-native";
+import upload from "../services/upload";
 
 // Create a Context
 export const CreateTripContext = createContext();
@@ -68,10 +70,14 @@ export const ContextProvider = ({ children }) => {
           fullName: fullname,
           email,
         }));
+
+        // if data was updated successfully store the image in Firestore
+        upload(avatar);
       } else {
         console.error("No user is currently authenticated.");
       }
     } catch (err) {
+      Alert.alert("Error: " + err.message);
       console.error("Error updating user details:", err);
     }
   };
