@@ -1,6 +1,8 @@
-# Welcome to your Expo app 👋
+# Welcome to your Ai Travel Planner 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+It is a travel planner application that uses gemini ai via the api to generate a travel plan for you based on the options you select.
 
 ## Get started
 
