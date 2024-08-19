@@ -8,12 +8,16 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import dayjs from "dayjs";
 import { dataResponse } from "../../constants/apiResponse";
 import { place1 } from "../../assets/images/index";
+import { CreateTripContext } from "../../context/CreateTripContext";
 
 const Discover = () => {
+  const { userData } = useContext(CreateTripContext);
+  const trips = userData?.trips;
+  console.log(trips);
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle={"dark-content"} />

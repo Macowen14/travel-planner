@@ -1,4 +1,4 @@
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../configs/firebase";
@@ -47,6 +49,7 @@ const SignupPage = () => {
         trips: [],
       });
       console.log("User info saved to Firestore");
+      Alert.alert("User signed up successfully");
       setLoading(false);
       route.push("/(tabs)/mytrips");
     } catch (error) {
@@ -68,6 +71,15 @@ const SignupPage = () => {
       <Text className="text-3xl font-extrabold text-gray-900 mb-6">
         Create Your Account
       </Text>
+      {loading && (
+        <>
+          <Text className="text-sm text-slate-500 text-center">
+            {" "}
+            Please wait as we sign you up.......{" "}
+          </Text>
+          <ActivityIndicator size={"small"} />
+        </>
+      )}
       <View className="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
         <TextInput
           className="border border-gray-300 rounded-lg p-4 mb-4 text-gray-800 bg-gray-50"

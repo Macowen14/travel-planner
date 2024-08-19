@@ -12,12 +12,15 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router"; // Ensure you import this
 import { CreateTripContext } from "../../context/CreateTripContext";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
+  const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-  const { userData, updateUserDetails } = useContext(CreateTripContext);
+  const { userData, updateUserDetails, setUserData } =
+    useContext(CreateTripContext);
   const [updating, setUpdating] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -49,7 +52,7 @@ const Profile = () => {
     });
 
     if (!result.canceled) {
-      setSelectedAvatar(result.uri);
+      setSelectedAvatar(result.assets[0].uri); // Updated for better compatibility
     }
   };
 
@@ -77,6 +80,24 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "OK",
+          onPress: () => {
+            setUserData(null); // Clear user data
+            router.push("/(auth)/signin"); // Navigate to sign-in page
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   if (!userData) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center">
@@ -87,7 +108,7 @@ const Profile = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 pt-10 items-center">
+    <SafeAreaView className="flex-1 pt-10 items-center relative">
       <StatusBar barStyle="dark-content" />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -96,7 +117,13 @@ const Profile = () => {
         <Text className="font-outfitBold text-xl text-center mb-4">
           Hello {username || "user"}, welcome to your profile
         </Text>
-
+        <TouchableOpacity
+          className="mt-2 bg-red-500 py-2 px-4 rounded-lg flex-row items-center absolute top-6 right-2"
+          onPress={handleLogout}
+        >
+          <MaterialIcons name="logout" size={24} color="white" />
+          <Text className="text-white font-bold ml-2">Logout</Text>
+        </TouchableOpacity>
         <View className="items-center mt-4">
           <Image
             source={
@@ -104,8 +131,9 @@ const Profile = () => {
                 ? { uri: selectedAvatar }
                 : require("../../assets/images/man.png")
             }
-            style={{ height: 192, width: 192, borderRadius: 96 }}
+            style={{ height: 182, width: 182, borderRadius: 96 }}
           />
+
           <View className="mt-4 space-y-4">
             <TextInput
               placeholder="Enter your username"

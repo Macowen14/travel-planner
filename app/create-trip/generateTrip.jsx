@@ -84,7 +84,6 @@ const LoadingAnimation = () => {
       console.error("Error generating AI trip:", error);
       setLoading(!loading);
       Alert.alert("Error", "There was an issue generating your trip.");
-
       router.back();
     }
   };
