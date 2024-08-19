@@ -54,25 +54,26 @@ export const ContextProvider = ({ children }) => {
     try {
       const userId = auth.currentUser?.uid;
       if (userId) {
-        // Update user data in Firestore
-        await updateDoc(doc(db, "UsersTrips", userId), {
-          displayName: username,
-          avatar,
-          fullName: fullname,
-          email,
-        });
+        // Prepare the data to be updated
+        const updatedData = {};
 
-        // Update user data in the local state
-        setUserData((prevData) => ({
-          ...prevData,
-          displayName: username,
-          avatar,
-          fullName: fullname,
-          email,
-        }));
+        if (username !== undefined) updatedData.displayName = username;
+        if (avatar !== undefined) updatedData.avatar = avatar;
+        if (fullname !== undefined) updatedData.fullName = fullname;
+        if (email !== undefined) updatedData.email = email;
 
-        // if data was updated successfully store the image in Firestore
-        upload(avatar);
+        // Update user data in Firestore only with defined values
+        await updateDoc(doc(db, "UsersTrips", userId), updatedData);
+
+        // If the avatar was updated, store the image in Firestore
+        if (avatar !== undefined) {
+          await upload(avatar);
+        }
+
+        // Reload the updated user data
+        await loadUserData(userId);
+
+        console.log("User details updated successfully.");
       } else {
         console.error("No user is currently authenticated.");
       }

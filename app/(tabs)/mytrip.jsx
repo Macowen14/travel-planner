@@ -11,6 +11,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { CreateTripContext } from "../../context/CreateTripContext";
 import UserTripList from "../../components/UserTripList";
+import StartTripCard from "../../components/StartTripCard";
 
 const MyTrip = () => {
   const { userData } = useContext(CreateTripContext);
@@ -29,7 +30,7 @@ const MyTrip = () => {
         </TouchableOpacity>
       </View>
 
-      {userTrips.length === 0 ? <UserTripList /> : null}
+      {userTrips.length === 0 ? <StartTripCard /> : <UserTripList />}
     </SafeAreaView>
   );
 };
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
     backgroundColor: "#fff",
-    paddingHorizontal: 18,
+    paddingHorizontal: 8,
   },
   headerContainer: {
     flexDirection: "row",
@@ -50,6 +51,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    paddingLeft: 10,
+    paddingBottom: 10,
   },
 });
 

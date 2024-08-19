@@ -14,12 +14,12 @@ import { place1 } from "../assets/images";
 
 const UserTripList = () => {
   return (
-    <ScrollView horizontal={false} scrollEnabled={true}>
+    <ScrollView horizontal={false} scrollEnabled={true} className="space-y-2">
       <TouchableOpacity
-        className="p-2 flex items-center space-y-5 "
+        className="p-2 flex items-center space-y-5 bg-gray-400 rounded-xl"
         onPress={() => router.push("/discover")}
       >
-        <Text className="text-sm font-outfitMedium text-slate-500">
+        <Text className="text-sm font-outfitMedium text-white">
           Your trip details and options are generated below
         </Text>
 
@@ -29,7 +29,7 @@ const UserTripList = () => {
         />
 
         {/* Trip Details */}
-        <View className="mt-2 flex justify-between flex-row bg-gray-50 shadow-md rounded-md space-x-9 py-3">
+        <View className="mt-2 flex justify-between flex-row bg-gray-50 shadow-md rounded-md space-x-10 py-3 p-1">
           <View className="space-y-2">
             <Text className="font-outfitMedium text-lg">
               {dataResponse?.trip_details?.destination}

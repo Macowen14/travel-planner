@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { CreateTripContext } from "../../context/CreateTripContext";
@@ -17,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 const Profile = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const { userData, updateUserDetails } = useContext(CreateTripContext);
-
+  const [updating, setUpdating] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
@@ -27,32 +28,19 @@ const Profile = () => {
       setEmail(userData.email || "");
       setFullName(userData.fullName || "");
       setUsername(userData.displayName || "");
-      // Set the initial avatar from userData
       if (userData.avatar) {
         setSelectedAvatar(userData.avatar);
       }
     }
   }, [userData]);
 
-  useEffect(() => {
-    console.log("Selected Avatar URI: ", selectedAvatar);
-  }, [selectedAvatar]);
-
-  useEffect(() => {
-    console.log("email:", email);
-    console.log("fullName:", fullName);
-    console.log("username:", username);
-  }, [email, fullName, username]);
-
   const pickImage = async () => {
-    // Request permission to access the media library
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert("Sorry, we need camera roll permissions to make this work!");
       return;
     }
 
-    // Launch the image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -61,7 +49,6 @@ const Profile = () => {
     });
 
     if (!result.canceled) {
-      // Set the selected image URI
       setSelectedAvatar(result.uri);
     }
   };
@@ -70,16 +57,34 @@ const Profile = () => {
     setSelectedAvatar(avatar);
   };
 
-  const saveProfile = () => {
-    updateUserDetails({
-      username,
-      avatar: selectedAvatar,
-      fullName,
-      email,
-    });
-    // Sample alert for demonstration
-    Alert.alert("Profile Saved", "Your profile has been updated successfully.");
+  const saveProfile = async () => {
+    try {
+      setUpdating(true);
+      await updateUserDetails({
+        username,
+        avatar: selectedAvatar,
+        fullName,
+        email,
+      });
+      Alert.alert(
+        "Profile Saved",
+        "Your profile has been updated successfully."
+      );
+    } catch (err) {
+      Alert.alert("Error: " + err.message);
+    } finally {
+      setUpdating(false);
+    }
   };
+
+  if (!userData) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading profile...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 pt-10 items-center">
@@ -93,7 +98,6 @@ const Profile = () => {
         </Text>
 
         <View className="items-center mt-4">
-          {/* Display profile image */}
           <Image
             source={
               selectedAvatar
@@ -121,13 +125,11 @@ const Profile = () => {
             <TextInput
               placeholder="Enter your full name"
               value={fullName}
-              readOnly={true}
+              editable={false}
               className="border border-gray-300 rounded-lg px-4 py-2 w-72 mt-0"
-              onChangeText={setFullName}
             />
           </View>
 
-          {/* Upload Image Button */}
           <TouchableOpacity
             className="mt-6 bg-blue-600 py-2 px-4 rounded-lg"
             onPress={pickImage}
@@ -135,7 +137,6 @@ const Profile = () => {
             <Text className="text-white font-bold">Upload New Image</Text>
           </TouchableOpacity>
 
-          {/* Avatar Options */}
           <View className="flex-row mt-6 space-x-4">
             <TouchableOpacity
               onPress={() =>
@@ -165,10 +166,10 @@ const Profile = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Save Button */}
           <TouchableOpacity
             className="mt-6 bg-green-600 py-2 px-4 rounded-lg flex-row items-center"
             onPress={saveProfile}
+            disabled={updating}
           >
             <MaterialIcons name="save" size={24} color="white" />
             <Text className="text-white font-bold ml-2">Save Changes</Text>
