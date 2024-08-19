@@ -18,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
   const router = useRouter();
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState("");
   const { userData, updateUserDetails, setUserData } =
     useContext(CreateTripContext);
   const [updating, setUpdating] = useState(false);

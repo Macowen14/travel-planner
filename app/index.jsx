@@ -35,7 +35,7 @@ export default function Index() {
         }}
       >
         <Text className="text-slate-500 text-center font-outfitRegular">
-          Loading auth status ....
+          Loading auth status and fetching user info ....
         </Text>
         <LottieView
           source={require("../assets/animation/loading.json")}

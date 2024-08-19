@@ -5,11 +5,10 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-const upload = (file) => {
+const upload = (file, uid) => {
   return new Promise((resolve, reject) => {
     const storage = getStorage();
-    const storageRef = ref(storage, `images/${Date.now()}+${file.name}`);
-
+    const storageRef = ref(storage, `images/${Date.now()}+${uid}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(

@@ -62,7 +62,7 @@ export const ContextProvider = ({ children }) => {
         await updateDoc(doc(db, "UsersTrips", userId), updatedData);
 
         if (avatar !== undefined) {
-          await upload(avatar);
+          await upload(avatar, userId);
         }
 
         await loadUserData(userId);
