@@ -3,15 +3,17 @@ import { StyleSheet, Text, SafeAreaView, Alert, View } from "react-native";
 import LottieView from "lottie-react-native";
 import { chatSession } from "../../configs/AiModel";
 import { auth, db } from "../../configs/firebase";
-import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
+import { doc, setDoc, arrayUnion } from "firebase/firestore"; // Import Firestore functions
 import { AI_PROMPT } from "../../constants/Options";
 import { CreateTripContext } from "../../context/CreateTripContext";
+import { dataResponse } from "../../constants/apiResponse";
+import { router } from "expo-router";
 
 const LoadingAnimation = () => {
   const { tripData } = useContext(CreateTripContext);
   const [loading, setLoading] = useState(true);
 
-  const saveTripData = async (aiResponse) => {
+  const saveTripData = async (jsonResponse) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -20,13 +22,20 @@ const LoadingAnimation = () => {
     }
 
     const userId = user.uid;
-    const tripDocRef = doc(db, "UsersTrips", userId); // Create a reference with the user's UID
+    const tripDocRef = doc(db, "UsersTrips", userId); // Reference to the document using the user's UID
 
     try {
-      await setDoc(tripDocRef, {
-        tripData: tripData,
-        travelPlan: aiResponse, // Store the AI-generated response
-      });
+      await setDoc(
+        tripDocRef,
+        {
+          trips: arrayUnion({
+            tripData: tripData,
+            travelPlan: jsonResponse, // Store the AI-generated response
+            timestamp: Date.now(),
+          }),
+        },
+        { merge: true } // Merge with existing data instead of overwriting
+      );
       Alert.alert("Success", "Your trip has been saved successfully!");
     } catch (error) {
       console.error("Error saving trip data:", error);
@@ -75,6 +84,8 @@ const LoadingAnimation = () => {
       console.error("Error generating AI trip:", error);
       setLoading(!loading);
       Alert.alert("Error", "There was an issue generating your trip.");
+
+      router.back();
     }
   };
 

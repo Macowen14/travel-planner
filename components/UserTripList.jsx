@@ -11,15 +11,15 @@ import { dataResponse } from "../constants/apiResponse";
 import dayjs from "dayjs";
 import { router } from "expo-router";
 import { place1 } from "../assets/images";
+import { useContext } from "react";
+import { CreateTripContext } from "../context/CreateTripContext";
 
 const UserTripList = () => {
+  const { userData } = useContext(CreateTripContext);
   return (
     <ScrollView horizontal={false} scrollEnabled={true} className="space-y-2">
-      <TouchableOpacity
-        className="p-2 flex items-center space-y-5 bg-gray-400 rounded-xl"
-        onPress={() => router.push("/discover")}
-      >
-        <Text className="text-sm font-outfitMedium text-white">
+      <View className="p-2 flex items-center space-y-5 rounded-xl shadow">
+        <Text className="text-sm font-outfitMedium text-slate-500">
           Your trip details and options are generated below
         </Text>
 
@@ -53,7 +53,13 @@ const UserTripList = () => {
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          className="items-center bg-background w-[70%] py-3 rounded-xl"
+          onPress={() => router.push("/discover")}
+        >
+          <Text className="text-white font-outfitBold text-lg">view trip</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };

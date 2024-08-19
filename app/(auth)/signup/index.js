@@ -48,7 +48,7 @@ const SignupPage = () => {
       });
       console.log("User info saved to Firestore");
       setLoading(false);
-      route.back();
+      route.push("/(tabs)/mytrips");
     } catch (error) {
       console.error("Error signing up:", error.code, error.message);
       ToastAndroid.show(

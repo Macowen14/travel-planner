@@ -11,26 +11,26 @@ export const CreateTripContext = createContext();
 
 // Create a Provider Component
 export const ContextProvider = ({ children }) => {
-  const [tripData, setTripData] = useState({});
-  const [userData, setUserData] = useState(null); // Changed initial state to null
+  const [tripData, setTripData] = useState([]);
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
 
   // Function to add or update trip data
-  const updateTripData = (newData) => {
-    setTripData((prevData) => ({
-      ...prevData,
-      ...newData,
-    }));
+  const updateTripData = (newTrip) => {
+    setTripData((prevTrips) => [...prevTrips, newTrip]);
   };
 
-  // Function to load user data from Firestore and handle navigation
+  // Function to load user data from Firestore, including trips
   const loadUserData = async (uid) => {
     try {
-      const userRef = doc(db, "UsersTrips", uid); // Reference to the user's document
-      const userSnap = await getDoc(userRef); // Fetch the user document
-      const userData = userSnap.data(); // Extract the user data
+      const userRef = doc(db, "UsersTrips", uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
 
-      setUserData(userData); // Update the userData state
+      if (userData) {
+        setUserData(userData);
+        setTripData(userData.trips || []); // Set trips if they exist, otherwise set an empty array
+      }
     } catch (err) {
       console.error("Error loading user data:", err);
     }
@@ -42,37 +42,30 @@ export const ContextProvider = ({ children }) => {
       if (user) {
         loadUserData(user.uid);
       } else {
-        // Optionally handle cases where the user is not authenticated
         router.push("/(auth)/signin");
       }
     });
 
-    return () => unsubscribe(); // Cleanup the listener on unmount
+    return () => unsubscribe();
   }, [router]);
 
   const updateUserDetails = async ({ username, avatar, fullname, email }) => {
     try {
       const userId = auth.currentUser?.uid;
       if (userId) {
-        // Prepare the data to be updated
         const updatedData = {};
-
         if (username !== undefined) updatedData.displayName = username;
         if (avatar !== undefined) updatedData.avatar = avatar;
         if (fullname !== undefined) updatedData.fullName = fullname;
         if (email !== undefined) updatedData.email = email;
 
-        // Update user data in Firestore only with defined values
         await updateDoc(doc(db, "UsersTrips", userId), updatedData);
 
-        // If the avatar was updated, store the image in Firestore
         if (avatar !== undefined) {
           await upload(avatar);
         }
 
-        // Reload the updated user data
         await loadUserData(userId);
-
         console.log("User details updated successfully.");
       } else {
         console.error("No user is currently authenticated.");
@@ -92,7 +85,7 @@ export const ContextProvider = ({ children }) => {
         loadUserData,
         userData,
         updateUserDetails,
-        userId: auth.currentUser?.uid, // Added userId to the context provider for accessing user data in other components
+        userId: auth.currentUser?.uid,
       }}
     >
       {children}

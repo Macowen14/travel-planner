@@ -15,7 +15,7 @@ import StartTripCard from "../../components/StartTripCard";
 
 const MyTrip = () => {
   const { userData } = useContext(CreateTripContext);
-  const [userTrips, setUserTrips] = useState([]);
+
   const router = useRouter();
 
   return (
@@ -30,7 +30,13 @@ const MyTrip = () => {
         </TouchableOpacity>
       </View>
 
-      {userTrips.length === 0 ? <StartTripCard /> : <UserTripList />}
+      {!userData ||
+      !Array.isArray(userData.trips) ||
+      userData.trips.length === 0 ? (
+        <StartTripCard />
+      ) : (
+        <UserTripList />
+      )}
     </SafeAreaView>
   );
 };
