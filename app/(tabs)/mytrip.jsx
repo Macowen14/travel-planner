@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  BackHandler,
-  Alert,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
@@ -17,37 +15,8 @@ import StartTripCard from "../../components/StartTripCard";
 
 const MyTrip = () => {
   const { userData } = useContext(CreateTripContext);
+
   const router = useRouter();
-
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert(
-        "Exit App",
-        "Do you want to exit the app?",
-        [
-          {
-            text: "Cancel",
-            onPress: () => null, // Do nothing if "Cancel" is pressed
-            style: "cancel",
-          },
-          {
-            text: "OK",
-            onPress: () => BackHandler.exitApp(), // Exit the app if "OK" is pressed
-          },
-        ],
-        { cancelable: false } // Prevent dismissal by tapping outside the alert
-      );
-      return true; // Returning true indicates that we have handled the back button
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    // Clean up the event listener on component unmount
-    return () => backHandler.remove();
-  }, [router]);
 
   return (
     <SafeAreaView style={styles.container}>

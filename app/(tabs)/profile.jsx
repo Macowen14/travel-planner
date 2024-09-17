@@ -16,8 +16,10 @@ import { CreateTripContext } from "../../context/CreateTripContext";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
+  const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-  const { userData, updateUserDetails } = useContext(CreateTripContext);
+  const { userData, updateUserDetails, setUserData } =
+    useContext(CreateTripContext);
   const [updating, setUpdating] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");

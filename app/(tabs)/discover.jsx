@@ -10,9 +10,14 @@ import {
 } from "react-native";
 import React from "react";
 import dayjs from "dayjs";
+import { dataResponse } from "../../constants/apiResponse";
 import { place1 } from "../../assets/images/index";
+import { CreateTripContext } from "../../context/CreateTripContext";
 
 const Discover = () => {
+  const { userData } = useContext(CreateTripContext);
+  const trips = userData?.trips;
+  console.log(trips);
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle={"dark-content"} />
@@ -41,27 +46,35 @@ const Discover = () => {
           <View className="mt-2 flex flex-row justify-between bg-gray-50 p-4 shadow-md rounded-md items-center space-x-5 w-full">
             <View className="flex-1">
               <Text className="font-outfitMedium text-lg">
-                {trip?.trip_details?.destination}
+                {dataResponse?.trip_details?.destination}
               </Text>
               <Text className="text-sm text-gray-600">
                 Start date:{" "}
-                {dayjs(trip?.trip_details?.start_date).format("DD/MM/YYYY")}
+                {dayjs(dataResponse?.trip_details?.start_date).format(
+                  "DD/MM/YYYY"
+                )}
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-sm">{trip?.trip_details?.duration}</Text>
-              <Text className="text-sm">{trip?.trip_details?.travelers}</Text>
-              <Text className="text-sm">{trip?.trip_details?.budget}</Text>
+              <Text className="text-sm">
+                {dataResponse?.trip_details?.duration}
+              </Text>
+              <Text className="text-sm">
+                {dataResponse?.trip_details?.travelers}
+              </Text>
+              <Text className="text-sm">
+                {dataResponse?.trip_details?.budget}
+              </Text>
             </View>
           </View>
 
           {/* Transportation Section */}
           <View className="bg-white p-4 mt-1 shadow-md rounded-md space-y-3 w-full">
             <Text className="font-outfitBold text-lg">Transportation</Text>
-            {Object.keys(trip?.transportation || {}).map((type) => (
+            {Object.keys(dataResponse.transportation).map((type) => (
               <View key={type} className="space-y-2">
                 <Text className="font-outfitMedium capitalize">{type}</Text>
-                {Object.values(trip?.transportation[type] || {}).map(
+                {Object.values(dataResponse.transportation[type]).map(
                   (option, index) => (
                     <View
                       key={index}
@@ -89,7 +102,7 @@ const Discover = () => {
           {/* Accommodation Section */}
           <View className="bg-white p-4 mt-3 shadow-md rounded-md space-y-3 w-full">
             <Text className="font-outfitBold text-lg">Accommodation</Text>
-            {trip?.accommodation?.hotel_options?.map((hotel, index) => (
+            {dataResponse.accommodation.hotel_options.map((hotel, index) => (
               <View
                 key={index}
                 className="bg-gray-100 p-3 rounded-md space-y-1"
@@ -106,7 +119,7 @@ const Discover = () => {
           {/* Attractions Section */}
           <View className="bg-white p-4 mt-3 shadow-md rounded-md space-y-3 w-full">
             <Text className="font-outfitBold text-lg">Attractions</Text>
-            {trip?.attractions?.map((attraction, index) => (
+            {dataResponse.attractions.map((attraction, index) => (
               <View
                 key={index}
                 className="bg-gray-100 p-3 rounded-md space-y-2"
@@ -133,7 +146,7 @@ const Discover = () => {
           {/* Daily Schedule Section */}
           <View className="bg-white p-4 mt-3 shadow-md rounded-md space-y-3 w-full">
             <Text className="font-outfitBold text-lg">Daily Schedule</Text>
-            {trip?.daily_schedule?.map((day, index) => (
+            {dataResponse.daily_schedule.map((day, index) => (
               <View
                 key={index}
                 className="bg-gray-100 p-3 rounded-md space-y-2"
