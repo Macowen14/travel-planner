@@ -10,8 +10,6 @@ import {
   Platform,
   ScrollView,
   Keyboard,
-  Alert,
-  ActivityIndicator,
 } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
 import { signInWithEmail } from "../../../services/auth";
@@ -24,7 +22,6 @@ const Signin = () => {
   const [password, setPassword] = useState("");
   const { promptAsync } = useGoogleAuth(); // Use the custom hook for Google Sign-In
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // Function to handle sign-in with email and password
   const handleSignIn = async () => {
@@ -32,14 +29,11 @@ const Signin = () => {
       ToastAndroid.show("Please fill in all fields", ToastAndroid.TOP);
     } else {
       try {
-        setLoading(true);
         const user = await signInWithEmail(email, password);
         console.log(user);
-        setLoading(false);
         route.navigate("/mytrip");
       } catch (error) {
-        Alert.alert(error.message);
-        setLoading(false);
+        ToastAndroid.show(error.message, ToastAndroid.SHORT);
         console.log(error.code, error.message);
       }
     }
@@ -90,7 +84,6 @@ const Signin = () => {
             >
               Let's Sign You In
             </Text>
-            <ActivityIndicator size={"small"} aria-disabled={!loading} />
             <Text
               className="font-bold text-center text-slate-500 mt-4"
               style={{ fontFamily: "outfitMedium", fontSize: 20 }}

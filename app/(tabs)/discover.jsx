@@ -8,33 +8,11 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import React, { useContext } from "react";
+import React from "react";
 import dayjs from "dayjs";
 import { place1 } from "../../assets/images/index";
-import { CreateTripContext } from "../../context/CreateTripContext";
-import { useNavigation } from "@react-navigation/native";
-import { router } from "expo-router";
 
 const Discover = () => {
-  const { userData } = useContext(CreateTripContext);
-  const trips = userData?.trips;
-  const trip = trips?.[0]?.travelPlan;
-
-  if (!trip || !trips) {
-    return (
-      <SafeAreaView className="flex-1 bg-white justify-center items-center">
-        <StatusBar barStyle={"dark-content"} />
-        <Text className="text-lg font-bold mb-4">No trips available</Text>
-        <TouchableOpacity
-          className="bg-blue-500 px-4 py-2 rounded-md"
-          onPress={() => router.push("/mytrip")}
-        >
-          <Text className="text-white">Go to My Trip</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle={"dark-content"} />
